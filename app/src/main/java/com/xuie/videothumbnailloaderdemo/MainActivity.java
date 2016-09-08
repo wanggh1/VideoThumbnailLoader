@@ -71,7 +71,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override public void onBindViewHolder(MyViewHolder holder, int position) {
-            VideoThumbnailLoader.get().display(medias.get(position).getPath(), holder.image, getWindowManager().getDefaultDisplay().getWidth(), (int) dpToPx(144), null);
+            VideoThumbnailLoader.get().display(
+                    medias.get(position).getPath(),
+                    holder.image,
+                    getWindowManager().getDefaultDisplay().getWidth(),
+                    (int) dpToPx(144),
+                    null);
             holder.title.setText(medias.get(position).getTitle());
         }
 
@@ -83,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
             ImageView image;
             TextView title;
 
-            public MyViewHolder(View itemView) {
+            MyViewHolder(View itemView) {
                 super(itemView);
                 image = (ImageView) itemView.findViewById(R.id.image);
                 title = (TextView) itemView.findViewById(R.id.title);
