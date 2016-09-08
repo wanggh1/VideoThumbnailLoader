@@ -2,12 +2,13 @@ package com.xuie.videothumbnailloaderdemo;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.Environment;
+import android.provider.MediaStore;
 
-import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
-import com.nostra13.universalimageloader.utils.L;
+import com.xuie.videothumbnailloader.VideoThumbnailConfiguration;
+import com.xuie.videothumbnailloader.VideoThumbnailLoader;
+
+import java.io.File;
 
 /**
  * Created by xuie on 16-9-7.
@@ -20,17 +21,11 @@ public class App extends Application {
         super.onCreate();
         context = this;
 
-
-        ImageLoaderConfiguration.Builder config = new ImageLoaderConfiguration.Builder(this);
-        config.threadPriority(Thread.NORM_PRIORITY - 2);
-        config.denyCacheImageMultipleSizesInMemory();
-        config.diskCacheFileNameGenerator(new Md5FileNameGenerator());
-        config.diskCacheSize(50 * 1024 * 1024); // 50 MiB
-        config.tasksProcessingOrder(QueueProcessingType.LIFO);
-        config.writeDebugLogs(); // Remove for release app
-        // Initialize ImageLoader with configuration.
-        ImageLoader.getInstance().init(config.build());
-        L.writeLogs(false);
+        VideoThumbnailConfiguration.Builder config = new VideoThumbnailConfiguration.Builder(this);
+        config.setKind(MediaStore.Video.Thumbnails.MINI_KIND);
+        config.setQuality(100);
+        config.setSaveBitmapFileDir(new File(Environment.getExternalStorageDirectory().getPath() + "/VideothumbnailCached/"));
+        VideoThumbnailLoader.get().init(config.build());
     }
 
     public static Context getContext() {

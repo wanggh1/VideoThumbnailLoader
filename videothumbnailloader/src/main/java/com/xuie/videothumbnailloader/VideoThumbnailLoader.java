@@ -4,13 +4,15 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.widget.ImageView;
 
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.MemoryCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.nostra13.universalimageloader.utils.L;
 import com.xuie.videothumbnailloader.util.BitmapUtils;
 
 import java.io.File;
@@ -23,6 +25,7 @@ public class VideoThumbnailLoader {
 
     private static final String TAG = "VideoThumbnailLoader";
     private MemoryCache mMCache;//一级缓存,内存缓存
+    private VideoThumbnailConfiguration configuration;
 
     private static VideoThumbnailLoader ins = new VideoThumbnailLoader();
 
@@ -31,6 +34,26 @@ public class VideoThumbnailLoader {
     }
 
     private VideoThumbnailLoader() {
+    }
+
+    public void init(VideoThumbnailConfiguration configuration) {
+        if (configuration == null) {
+            throw new IllegalArgumentException("VideoThumbnailLoader configuration can not be initialized with null");
+        }
+
+        this.configuration = configuration;
+
+        ImageLoaderConfiguration.Builder config = new ImageLoaderConfiguration.Builder(configuration.context);
+        config.threadPriority(Thread.NORM_PRIORITY - 2);
+        config.denyCacheImageMultipleSizesInMemory();
+        config.diskCacheFileNameGenerator(new Md5FileNameGenerator());
+        config.diskCacheSize(50 * 1024 * 1024); // 50 MiB
+        config.tasksProcessingOrder(QueueProcessingType.LIFO);
+        config.writeDebugLogs(); // Remove for release app
+        // Initialize ImageLoader with configuration.
+        ImageLoader.getInstance().init(config.build());
+        L.writeLogs(false);
+
         mMCache = ImageLoader.getInstance().getMemoryCache();
     }
 
@@ -64,24 +87,24 @@ public class VideoThumbnailLoader {
                 bitmap = mMCache.get(key);//先去内存缓存取
                 if (bitmap == null || bitmap.isRecycled()) {
 //                    File file = TLFileUtils.getExternalFile(path, "xxx.png");//创建文件,这里由于项目原因,我就随便写一个,实际情况不是这样,大家留意一下
-                    File file = new File(Environment.getExternalStorageDirectory() + "/RuiZi/Cached/" + url);//创建文件,这里由于项目原因,我就随便写一个,实际情况不是这样,大家留意一下
+                    File file = configuration.saveBitmapFileDir;//创建文件,这里由于项目原因,我就随便写一个,实际情况不是这样,大家留意一下
                     if (file.exists()) {//去磁盘缓存取
                         bitmap = BitmapFactory.decodeFile(file.getPath());
                         if (null == bitmap) {
 //                            bitmap = getVideoThumbnail(url, width, height, MediaStore.Video.Thumbnails.MICRO_KIND);
-                            bitmap = getVideoThumbnail(url, width, height, MediaStore.Video.Thumbnails.MINI_KIND);
+                            bitmap = getVideoThumbnail(url, width, height, configuration.kind);
                             try {
-                                BitmapUtils.saveBitmapToFile(file, bitmap, Bitmap.CompressFormat.PNG, 100);
+                                BitmapUtils.saveBitmapToFile(file, bitmap, Bitmap.CompressFormat.PNG, configuration.quality);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
                         }
                     } else {
-                        bitmap = getVideoThumbnail(url, width, height, MediaStore.Video.Thumbnails.MINI_KIND);
+                        bitmap = getVideoThumbnail(url, width, height, configuration.kind);
                         if (null == bitmap) {
-                            bitmap = getVideoThumbnail(url, width, height, MediaStore.Video.Thumbnails.MINI_KIND);
+                            bitmap = getVideoThumbnail(url, width, height, configuration.kind);
                             try {
-                                BitmapUtils.saveBitmapToFile(file, bitmap, Bitmap.CompressFormat.PNG, 100);
+                                BitmapUtils.saveBitmapToFile(file, bitmap, Bitmap.CompressFormat.PNG, configuration.quality);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }

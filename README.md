@@ -5,7 +5,7 @@
 **build.gradle**
 
 ```
-compile 'com.xuie:videothumbnailloader:1.0.0'
+compile 'com.xuie:videothumbnailloader:1.0.1'
 ```
 
 **usage**
@@ -24,16 +24,11 @@ VideoThumbnailLoader.get().display(
 ```
 public class App extends Application {
     @Override public void onCreate() {
-        ImageLoaderConfiguration.Builder config = new ImageLoaderConfiguration.Builder(this);
-        config.threadPriority(Thread.NORM_PRIORITY - 2);
-        config.denyCacheImageMultipleSizesInMemory();
-        config.diskCacheFileNameGenerator(new Md5FileNameGenerator());
-        config.diskCacheSize(50 * 1024 * 1024); // 50 MiB
-        config.tasksProcessingOrder(QueueProcessingType.LIFO);
-        config.writeDebugLogs(); // Remove for release app
-        // Initialize ImageLoader with configuration.
-        ImageLoader.getInstance().init(config.build());
-        L.writeLogs(false);
+        VideoThumbnailConfiguration.Builder config = new VideoThumbnailConfiguration.Builder(this);
+        config.setKind(MediaStore.Video.Thumbnails.MINI_KIND);
+        config.setQuality(100);
+        config.setSaveBitmapFileDir(new File(Environment.getExternalStorageDirectory().getPath() + "/VideothumbnailCached/"));
+        VideoThumbnailLoader.get().init(config.build());
     }
 }
 ```
