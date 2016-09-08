@@ -19,7 +19,7 @@ VideoThumbnailLoader.get().display(
         null);
 ```
 
-> 缓存用了UIL库，所以在`Application`需要添加一段初始化代码
+add init code
 
 ```
 public class App extends Application {
