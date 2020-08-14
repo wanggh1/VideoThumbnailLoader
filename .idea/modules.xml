@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/VideoThumbnailLoader.iml" filepath="$PROJECT_DIR$/VideoThumbnailLoader.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/videothumbnailloader/videothumbnailloader.iml" filepath="$PROJECT_DIR$/videothumbnailloader/videothumbnailloader.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/VideoThumbnailLoader.iml" filepath="$PROJECT_DIR$/.idea/modules/VideoThumbnailLoader.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/VideoThumbnailLoader.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/VideoThumbnailLoader.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/videothumbnailloader/VideoThumbnailLoader.videothumbnailloader.iml" filepath="$PROJECT_DIR$/.idea/modules/videothumbnailloader/VideoThumbnailLoader.videothumbnailloader.iml" />
     </modules>
   </component>
 </project>
