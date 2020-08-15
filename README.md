@@ -5,7 +5,7 @@
 **build.gradle**
 
 ```
-compile 'com.xuie:videothumbnailloader:1.0.1'
+compile 'com.xuie:videothumbnailloader:1.0.2'
 ```
 
 **usage**
@@ -31,6 +31,12 @@ public class App extends Application {
         VideoThumbnailLoader.get().init(config.build());
     }
 }
+```
+
+# 生成库方法
+```
+gradlew install
+gradlew bintrayUpload
 ```
 
 
